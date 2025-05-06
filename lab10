@@ -1,20 +1,27 @@
-#include <LPC21xx.h> 
+#include <LPC21xx.H>
+
 void enable_interrupts(void)
 {
-	__asm 
-	{ MRS R0, CPSR 
-		      BIC R0, R0, #0x80 
-		      MSR CPSR_c, R0 
-	} 
+    __asm
+    {
+        MRS R0, CPSR       
+        BIC R0, R0, #0x80  
+        MSR CPSR_c, R0     
+    }
 }
-void disable_interrupts(void) 
-{ __asm
-	{ MRS R0, CPSR 
-		ORR R0, R0, #0x80 
-		MSR CPSR_c, R0  
-	}
+
+void disable_interrupts(void)
+{
+    __asm
+    {
+        MRS R0, CPSR       
+        ORR R0, R0, #0x80  
+        MSR CPSR_c, R0     
+    }
 }
-int main(void) 
-{  disable_interrupts();
-	 enable_interrupts();  
+
+int main(void)
+{
+    disable_interrupts();
+    enable_interrupts();
 }
