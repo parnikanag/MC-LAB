@@ -1,0 +1,55 @@
+	AREA RESET, CODE, READONLY 
+ENTRY 
+ 
+	LDR PC, =Reset_Handler
+	LDR PC, =Undefined_Handler 
+	LDR PC, =SWI_Handler 
+	LDR PC, =Prefetch_Handler 
+	LDR PC, =Data_Handler 
+	NOP 
+	LDR PC, =IRQ_Handler
+	LDR PC, =FIQ_Handler 
+Undefined_Handler 
+	B Undefined_Handler  
+SWI_Handler 
+	LDR R0, [LR, #-4]  
+	BIC R0, R0, #0xFF000000  
+	CMP R0, #0
+	BEQ Handle_Divide_By_Zero 
+	CMP R0, #1 
+	BEQ Handle_Invalid_Operation 
+	CMP R0, #2 
+	BEQ Handle_Overflow 
+	B SWI_Handler  
+Handle_Divide_By_Zero 
+	LDR R0, =0xDDDDDDDD  
+	B SWI_Return 
+Handle_Invalid_Operation 
+	LDR R0, =0xBBBBBBBB  
+	B SWI_Return 
+Handle_Overflow 
+	LDR R0, =0xFFFFFFFF  
+	B SWI_Return 
+SWI_Return 
+	MOV PC, LR 
+Prefetch_Handler 
+	B Prefetch_Handler 
+Data_Handler 
+	B Data_Handler 
+IRQ_Handler 
+	B IRQ_Handler 
+FIQ_Handler 
+	B FIQ_Handler 
+Reset_Handler 
+	LDR SP, =0x4000 
+	MOV R0, #0 
+	SWI #0 
+	
+	MOV R0, #1 
+	SWI #1 
+
+	MOV R0, #2 
+	SWI #2 
+	
+	B .   
+	END
